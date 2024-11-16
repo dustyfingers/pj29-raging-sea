@@ -10,6 +10,9 @@ import waterFragmentShader from "./shaders/water/fragment.glsl";
  */
 // Debug
 const gui = new GUI({ width: 340 });
+const debug = {};
+debug.depthColor = "#0000ff";
+debug.surfaceColor = "#8888ff";
 
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
@@ -29,6 +32,8 @@ const waterMaterial = new THREE.ShaderMaterial({
   vertexShader: waterVertexShader,
   uniforms: {
     uTime: { value: 0 },
+
+    // waves
     uBigWavesElevation: {
       value: 0.2,
     },
@@ -37,6 +42,14 @@ const waterMaterial = new THREE.ShaderMaterial({
     },
     uBigWavesSpeed: {
       value: 0.75,
+    },
+
+    // colors
+    uDepthColor: {
+      value: new THREE.Color(debug.depthColor),
+    },
+    uSurfaceColor: {
+      value: new THREE.Color(debug.surfaceColor),
     },
   },
 });
@@ -66,6 +79,19 @@ gui
   .max(4)
   .step(0.001)
   .name("uBigWavesSpeed");
+
+gui
+  .addColor(debug, "depthColor")
+  .name("depthColor")
+  .onChange(() => {
+    waterMaterial.uniforms.uDepthColor.value.set(debug.depthColor);
+  });
+gui
+  .addColor(debug, "surfaceColor")
+  .name("surfaceColor")
+  .onChange(() => {
+    waterMaterial.uniforms.uSurfaceColor.value.set(debug.surfaceColor);
+  });
 
 // Mesh
 const water = new THREE.Mesh(waterGeometry, waterMaterial);
