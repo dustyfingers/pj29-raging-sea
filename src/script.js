@@ -51,6 +51,12 @@ const waterMaterial = new THREE.ShaderMaterial({
     uSurfaceColor: {
       value: new THREE.Color(debug.surfaceColor),
     },
+    uColorOffset: {
+      value: 0.25
+    },
+    uColorMultiplier: {
+      value: 2
+    }
   },
 });
 
@@ -80,6 +86,7 @@ gui
   .step(0.001)
   .name("uBigWavesSpeed");
 
+// colors
 gui
   .addColor(debug, "depthColor")
   .name("depthColor")
@@ -92,6 +99,19 @@ gui
   .onChange(() => {
     waterMaterial.uniforms.uSurfaceColor.value.set(debug.surfaceColor);
   });
+  gui
+  .add(waterMaterial.uniforms.uColorOffset, "value")
+  .min(0)
+  .max(1)
+  .step(0.001)
+  .name("uColorOffset");
+  gui
+  .add(waterMaterial.uniforms.uColorMultiplier, "value")
+  .min(0)
+  .max(10)
+  .step(0.01)
+  .name("uColorMultiplier");
+
 
 // Mesh
 const water = new THREE.Mesh(waterGeometry, waterMaterial);
